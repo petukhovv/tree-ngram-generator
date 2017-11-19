@@ -68,6 +68,6 @@ class NgramGenerator:
 
         :return: found n-grams
         """
-        ngrams = self.walk(self.ast[0], {'all': [], 'on_path': []})
+        ngrams = self.walk(self.ast, {'all': [], 'on_path': []})
 
         return ngrams['all']
