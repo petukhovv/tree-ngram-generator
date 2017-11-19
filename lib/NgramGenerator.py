@@ -42,7 +42,7 @@ class NgramGenerator:
         :param ngrams: object with n-gram arrays (temporary 'on_path' and finally 'all')
         :param depth: recursive depth
 
-        :return:
+        :return: new object with n-gram arrays (temporary 'on_path' and finally 'all')
         """
         n_bound = min(self.n, depth)
         ngrams_on_path_for_current = [None] * n_bound
