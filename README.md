@@ -2,7 +2,7 @@
 
 N-gram generation by AST.
 
-### Run example
+### Running example
 
 ```
 python3 main.py ./ast 3 3 ./ngrams
