@@ -13,6 +13,18 @@ python3 main.py -i ./ast -o features.json
 * **-i, --input_folder**: input folder with ASTs (in JSON format);
 * **-o, --output_file**: output file, which will contain extracted features (in JSON format: "feature": "found_number");
 
+## Configuration
+
+Configuration is specified in main.py and contains the following parameters:
+
+* **n**: max n in n-gram;
+* **max_distance**: max distance between neighboring nodes (window);
+* **no_normalize**: flag to normalize values (n-grams number);
+* **include**: array of arrays with sub-n-gram witch should be **contained** in the found n-grams;
+* **include_strict**: required n-grams (the remaining n-grams found will be removed);
+* **exclude**: array of arrays with sub-n-gram witch should be **not contained** in the found n-grams;
+* **exclude_strict**: n-grams, which should be excluded.
+
 ### AST format
 
 The program is required on input the AST of the following format (example input):
