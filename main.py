@@ -1,44 +1,55 @@
-import sys
-import os
+import argparse
+import json
 
-from lib.NgramGenerator import NgramGenerator
-from lib.helpers.Ast2VecConfigFormatConverter import Ast2VecConfigFormatConverter
+from lib.NGramsExtractor import NGramsExtractor
+
 from lib.helpers.FilesWalker import FilesWalker
 from lib.helpers.AstReader import AstReader
-from lib.helpers.NgramWriter import NgramWriter
+from lib.helpers.TimeLogger import TimeLogger
 
-if len(sys.argv) <= 1:
-    sys.stderr.write('ASTs folder not specified.\n')
-    exit()
+parser = argparse.ArgumentParser()
+parser.add_argument('--input_folder', '-i', nargs=1, type=str, help='folder with ASTs')
+parser.add_argument('--output_file', '-o', nargs=1, type=str, help='Output file, which will contain extracted features')
+args = parser.parse_args()
 
-if len(sys.argv) <= 2:
-    sys.stderr.write('Max gram order not specified (n in n-gram).\n')
-    exit()
+input_folder = args.input_folder[0]
+output_file = args.output_file[0]
 
-if len(sys.argv) <= 3:
-    sys.stderr.write('Max n-gram distance not specified.\n')
-    exit()
+params = {
+   'n': 3,
+   'max_distance': 3,
+   'no_normalize': True,
+   'exclude': [['FUN']]
+}
 
-if len(sys.argv) <= 4:
-    sys.stderr.write('Folder output (with n-gram configs) not specified.\n')
-    exit()
-
-folder_input = sys.argv[1]
-n = int(sys.argv[2])
-max_distance = int(sys.argv[3])
-folder_output = sys.argv[4]
+output = {
+    'ngrams': {},
+    'counter': 0
+}
 
 
-def ast_file_process(filename):
+def ast_file_process(filename, output):
+    time_logger = TimeLogger()
+
     root = AstReader.read(filename)
+    extractor = NGramsExtractor()
+    feature_values = extractor.extract(root, params)
+    output['ngrams'] = {**output['ngrams'], **feature_values}
+    output['counter'] += 1
 
-    ngram_generator = NgramGenerator(root, n, max_distance)
-    ngrams = ngram_generator.generate()
-
-    feartures = Ast2VecConfigFormatConverter.convert(ngrams, max_distance)
-
-    relative_filename = os.path.relpath(filename, folder_input)
-    NgramWriter.write(folder_output, relative_filename, feartures)
+    processed_time = time_logger.finish()
+    print(str(output['counter']) + ' file is processed, time: ' + str(processed_time) + ', ' +
+          str(len(list(feature_values))) + ' features extracted')
 
 
-FilesWalker.walk(folder_input, ast_file_process)
+time_logger = TimeLogger()
+
+FilesWalker.walk(input_folder, lambda filename: ast_file_process(filename, output))
+
+with open(output_file, 'w') as f:
+    f.write(json.dumps(output['ngrams'], default=str))
+
+total_processed_time = time_logger.finish()
+print('==================================')
+print(str(output['counter']) + ' files processed, total time: ' + str(total_processed_time) + ', ' +
+      str(len(list(output['ngrams']))) + ' features extracted')
