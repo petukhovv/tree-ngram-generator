@@ -1,4 +1,4 @@
-# ast-ngram-generator
+# ast-ngram-extractor
 
 N-gram extractor by AST.
 
