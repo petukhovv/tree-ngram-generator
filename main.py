@@ -9,7 +9,7 @@ from lib.helpers.TimeLogger import TimeLogger
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_folder', '-i', nargs=1, type=str, help='folder with ASTs')
-parser.add_argument('--output_file', '-o', nargs=1, type=str, help='Output file, which will contain extracted features')
+parser.add_argument('--output_file', '-o', nargs=1, type=str, help='output file, which will contain extracted features')
 args = parser.parse_args()
 
 input_folder = args.input_folder[0]

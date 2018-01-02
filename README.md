@@ -1,19 +1,17 @@
 # ast-ngram-generator
 
-N-gram generation by AST.
+N-gram extractor by AST.
 
 ### Running example
 
 ```
-python3 main.py ./ast 3 3 ./ngrams
+python3 main.py -i ./ast -o features.json
 ```
 
 ### Parameters
 
-- Folder with AST files (with any nesting);
-- Max gram order (n in n-gram): grams will be generated that are smaller and equal n;
-- Max distance between nodes (which are part of n-gram);
-- Output folder (n-gram configurations in JSON format; nesting will be repeated).
+* **-i, --input_folder**: input folder with ASTs (in JSON format);
+* **-o, --output_file**: output file, which will contain extracted features (in JSON format: "feature": "found_number");
 
 ### AST format
 
@@ -68,88 +66,39 @@ Also reqired AST transformer, which is a part of [**github-kotlin-code-collector
 
 ### Output format
 
-N-gram configuration is written in the JSON format.
+N-grams is written in the JSON format.
 
 For example:
 
 ```
-[
-   {
-      "type":"ngram",
-      "params":{
-         "name":"FUN",
-         "node_types":[
-            "FUN"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"MODIFIER_LIST",
-         "node_types":[
-            "MODIFIER_LIST"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"FUN:MODIFIER_LIST",
-         "node_types":[
-            "FUN",
-            "MODIFIER_LIST"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"override",
-         "node_types":[
-            "override"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"MODIFIER_LIST:override",
-         "node_types":[
-            "MODIFIER_LIST",
-            "override"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"FUN:override",
-         "node_types":[
-            "FUN",
-            "override"
-         ],
-         "max_distance":3
-      }
-   },
-   {
-      "type":"ngram",
-      "params":{
-         "name":"FUN:MODIFIER_LIST:override",
-         "node_types":[
-            "FUN",
-            "MODIFIER_LIST",
-            "override"
-         ],
-         "max_distance":3
-      }
-   }
-]
+{
+   "MODIFIER_LIST":1,
+   "override":1,
+   "MODIFIER_LIST:override":1,
+   "WHITE_SPACE":2,
+   "fun":1,
+   "IDENTIFIER":2,
+   "VALUE_PARAMETER_LIST":1,
+   "LPAR":11,
+   "VALUE_PARAMETER_LIST:LPAR":1,
+   "VALUE_PARAMETER":1,
+   "VALUE_PARAMETER_LIST:VALUE_PARAMETER":3,
+   "VALUE_PARAMETER_LIST:RPAR":1,
+   "BLOCK":1,
+   "LBRACE":1,
+   "BLOCK:LBRACE":1,
+   "BLOCK:WHITE_SPACE":11,
+   "DOT_QUALIFIED_EXPRESSION":13,
+   "BLOCK:DOT_QUALIFIED_EXPRESSION":6,
+   "DOT_QUALIFIED_EXPRESSION:DOT_QUALIFIED_EXPRESSION":12,
+   "BLOCK:DOT_QUALIFIED_EXPRESSION:DOT_QUALIFIED_EXPRESSION":9,
+   "DOT_QUALIFIED_EXPRESSION:REFERENCE_EXPRESSION":29,
+   "BLOCK:REFERENCE_EXPRESSION":8,
+   "DOT_QUALIFIED_EXPRESSION:DOT_QUALIFIED_EXPRESSION:REFERENCE_EXPRESSION":29,
+   "BLOCK:DOT_QUALIFIED_EXPRESSION:REFERENCE_EXPRESSION":14,
+   "DOT_QUALIFIED_EXPRESSION:IDENTIFIER":24,
+   "DOT_QUALIFIED_EXPRESSION:REFERENCE_EXPRESSION:IDENTIFIER":29
+}
 ```
 
-N-gram configuration can be used in [ast2vec](https://github.com/PetukhovVictor/ast2vec).
+N-gram list can be used in [feature-selection](https://github.com/PetukhovVictor/feature-selection) or [ast2vec](https://github.com/PetukhovVictor/ast2vec).
