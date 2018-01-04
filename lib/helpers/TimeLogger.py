@@ -1,4 +1,5 @@
 import time
+import datetime
 
 
 class TimeLogger:
@@ -6,8 +7,9 @@ class TimeLogger:
         self.start_time = time.time()
         self.accuracy = accuracy
 
-    def finish(self):
-        return round(time.time() - self.start_time, self.accuracy)
+    def finish(self, task_name):
+        seconds = round(time.time() - self.start_time, self.accuracy)
+        print(task_name + ' finished. Time: ' + str(datetime.timedelta(seconds=seconds)))
 
     @staticmethod
     def _output(times, prefix, accuracy):
@@ -18,7 +20,7 @@ class TimeLogger:
         if isinstance(times, list):
             for time in times:
                 output_str += '|' + str(round(time, accuracy))
-        elif times is not None:
+        else:
             output_str += str(round(times, accuracy))
 
         return output_str

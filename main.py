@@ -37,9 +37,8 @@ def ast_file_process(filename, output):
     output['ngrams'] = {**output['ngrams'], **feature_values}
     output['counter'] += 1
 
-    processed_time = time_logger.finish()
-    print(str(output['counter']) + ' file is processed, time: ' + str(processed_time) + ', ' +
-          str(len(list(feature_values))) + ' features extracted')
+    time_logger.finish(task_name='Processing ' + str(output['counter']) + ' file')
+    print(str(len(list(feature_values))) + ' features extracted')
 
 
 time_logger = TimeLogger()
@@ -49,7 +48,6 @@ FilesWalker.walk(input_folder, lambda filename: ast_file_process(filename, outpu
 with open(output_file, 'w') as f:
     f.write(json.dumps(output['ngrams'], default=str))
 
-total_processed_time = time_logger.finish()
 print('==================================')
-print(str(output['counter']) + ' files processed, total time: ' + str(total_processed_time) + ', ' +
-      str(len(list(output['ngrams']))) + ' features extracted')
+time_logger.finish('Processing ' + str(output['counter']) + ' files')
+print(str(len(list(output['ngrams']))) + ' features extracted')
