@@ -22,24 +22,22 @@ params = {
 }
 
 output = {
-    'ngrams': {},
-    'counter': 0
+    'ngrams': {}
 }
 
 
 def ast_file_process(filename, output):
-    time_logger = TimeLogger(task_name='Processing %d file' % output['counter'])
+    time_logger = TimeLogger(task_name='Processing %s file' % filename)
 
     root = AstReader.read(filename)
     extractor = NGramsExtractor()
     feature_values = extractor.extract(root, params)
     output['ngrams'] = {**output['ngrams'], **feature_values}
-    output['counter'] += 1
 
     time_logger.finish()
 
 
-time_logger = TimeLogger(task_name='Processing %d files' % output['counter'])
+time_logger = TimeLogger(task_name='N-gram extraction')
 
 FilesWalker.walk(input_folder, lambda filename: ast_file_process(filename, output))
 
@@ -47,4 +45,4 @@ with open(output_file, 'w') as f:
     f.write(json.dumps(output['ngrams'], default=str))
 
 time_logger.finish(full_finish=True)
-print('%d features extracted' % len(list(output['ngrams'])))
+print('%d n-grams extracted' % len(list(output['ngrams'])))
