@@ -37,7 +37,7 @@ def ast_file_process(filename, output):
     time_logger.finish()
 
 
-time_logger = TimeLogger(task_name='N-gram extraction')
+time_logger = TimeLogger(task_name='N-gram generating')
 
 FilesWalker.walk(input_folder, lambda filename: ast_file_process(filename, output))
 
@@ -45,4 +45,5 @@ with open(output_file, 'w') as f:
     f.write(json.dumps(output['ngrams'], default=str))
 
 time_logger.finish(full_finish=True)
-print('%d n-grams extracted' % len(list(output['ngrams'])))
+print('%d n-grams generated' % len(list(output['ngrams'])))
+print('-------------------')
